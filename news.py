@@ -63,6 +63,8 @@ class New():
 
     def demo(self):
         pass
+    def demo2(self):
+        pass
 
 if __name__== "__main__":
     new = New()
