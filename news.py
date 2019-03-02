@@ -38,31 +38,26 @@ class New():
         datas = json.loads(response)['result']['data']
 
         for data in datas:
-
-            # print(data['hasVideo'])#判断是否有视频
             title = data['title']
-
-            print('标题:>>',title)
+            # print('标题:>>',title)
             content_url = (data['wapurls'].replace('\\', ''))
-
-            print('内容链接:>>',content_url)
-            # for wapurl in (data['wapurls'].replace('\\', '')).replace(']',',]').replace('\"','\''):
-            #     print(wapurl)
+            # print('内容链接:>>',content_url)
             intro = data['intro']
-
-            print('介绍:>>',intro)
+            # print('介绍:>>',intro)
             image_dict = {}
             for image in data['images']:
                 image_dict[image['u']] = image['t']
-                # print(image['u'])
-            print('图片:>>',image_dict)
-
+            # print('图片:>>',image_dict)
             keywords = data['keywords']
-
-            print('关键字:>>',keywords)
-
+            # print('关键字:>>',keywords)
+            yield {'title':title,'content_url':content_url,'intro':intro,'image_dict':image_dict,'keywords':keywords}
 
 
 if __name__== "__main__":
-    new = New()
-    new._return_data()
+
+    while True:
+        new = New()
+        data = new._return_data()
+        for i in data:
+            print(i['title'])
+        time.sleep(60)
