@@ -50,18 +50,31 @@ class New():
             keywords = data['keywords']
             # print('关键字:>>',keywords)
             yield {'title':title,'content_url':content_url,'intro':intro,'image_dict':image_dict,'keywords':keywords}
+    def save(self):
+        while True:
+            data = self._return_data()
+            with open('new.txt', 'a', encoding='utf-8') as f:
+                for i in data:
+                    print(i['title']+'\n')
+                    f.write(i['title']+'\n')
+                f.flush()
+                f.close()
+            time.sleep(60)
 
 
 if __name__== "__main__":
+    new = New()
+    new.save()
 
-    while True:
-        new = New()
-        try:
-            data = new._return_data()
-            for i in data:
-                print(i['title'])
-                print('\n')
-        except (requests.exceptions.ConnectionError,UnboundLocalError) as e:
-            print(e)
-            print('\n')
-        time.sleep(60)
+
+    # while True:
+    #     new = New()
+    #     try:
+    #         data = new._return_data()
+    #         for i in data:
+    #             print(i['title'])
+    #             print('\n')
+    #     except (requests.exceptions.ConnectionError,UnboundLocalError) as e:
+    #         print(e)
+    #         print('\n')
+    #     time.sleep(60)
