@@ -30,7 +30,6 @@ class New():
         # print(url)
         s = requests.session()
         response = s.get(url, headers=self.headers,params=data).text
-
         response1 = re.findall('try{jQuery.*?\((.*?)\);}catch\(e\){};',response)[0]
         return response1
     def _return_data(self):
@@ -57,7 +56,10 @@ if __name__== "__main__":
 
     while True:
         new = New()
-        data = new._return_data()
-        for i in data:
-            print(i['title'])
+        try:
+            data = new._return_data()
+            for i in data:
+                print(i['title'])
+        except (requests.exceptions.ConnectionError,UnboundLocalError) as e:
+            print(e)
         time.sleep(60)
