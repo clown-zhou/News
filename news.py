@@ -60,6 +60,8 @@ if __name__== "__main__":
             data = new._return_data()
             for i in data:
                 print(i['title'])
+                print('\n')
         except (requests.exceptions.ConnectionError,UnboundLocalError) as e:
             print(e)
+            print('\n')
         time.sleep(60)
