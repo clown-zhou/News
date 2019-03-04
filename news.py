@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import csv
 import re
 class New():
     def __init__(self):
@@ -53,13 +54,23 @@ class New():
     def save(self):
         while True:
             data = self._return_data()
-            with open('new.txt', 'a', encoding='utf-8') as f:
-                for i in data:
-                    print(i['title']+'\n')
-                    f.write(i['title']+'\n')
-                f.flush()
-                f.close()
-            time.sleep(60)
+            with open('new.csv', 'a', encoding='utf-8',newline='') as f:
+                writer = csv.writer(f)
+                line_one =['title','content_url','intro','image_dict','keywords']
+                writer.writerow(line_one)
+                for row in data:
+                    datas = [
+                             [row['title'],row['content_url'],row['intro'],row['image_dict'],row['keywords'],]]
+                    # print(row)
+                    for i in datas:
+                        writer.writerow(i)
+                # for i in data:
+                #     datas = [['title',]]
+                #     print(i['title']+'\n')
+                #     writer.writerow(i)
+                # f.flush()
+                # f.close()
+            time.sleep(3)
 
 
 if __name__== "__main__":
