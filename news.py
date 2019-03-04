@@ -51,31 +51,25 @@ class New():
             keywords = data['keywords']
             # print('关键字:>>',keywords)
             yield {'title':title,'content_url':content_url,'intro':intro,'image_dict':image_dict,'keywords':keywords}
-    def save(self):
-        while True:
-            data = self._return_data()
-            with open('new.csv', 'a', encoding='utf-8',newline='') as f:
-                writer = csv.writer(f)
-                line_one =['title','content_url','intro','image_dict','keywords']
-                writer.writerow(line_one)
-                for row in data:
-                    datas = [
-                             [row['title'],row['content_url'],row['intro'],row['image_dict'],row['keywords'],]]
-                    # print(row)
-                    for i in datas:
-                        writer.writerow(i)
-                # for i in data:
-                #     datas = [['title',]]
-                #     print(i['title']+'\n')
-                #     writer.writerow(i)
-                # f.flush()
-                # f.close()
-            time.sleep(3)
+    def save_csv(self,data):
+
+        with open('new.csv', 'a', encoding='utf-8',newline='') as f:
+            writer = csv.writer(f)
+            line_one =['title','content_url','intro','image_dict','keywords']
+            writer.writerow(line_one)
+            for row in data:
+                datas = [row['title'],row['content_url'],row['intro'],row['image_dict'],row['keywords'],]
+                print(row['title'])
+                writer.writerow(datas)
+            f.flush()
+            f.close()
 
 
 if __name__== "__main__":
     new = New()
-    new.save()
+    while True:
+        new.save_csv(data=new._return_data())
+        time.sleep(60)
 
 
     # while True:
