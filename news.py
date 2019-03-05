@@ -43,7 +43,7 @@ class New():
             title = data.get('title')
             # print('标题:>>',title)
             content_url_list = []
-            content_url = content_url_list.append(data.get('wapurls').replace('\\', '').replace('["','').replace('"]',''))
+            content_url_list.append(re.findall("([a-z]+\://[a-zA-Z0-9\./-]+)",data.get('wapurls').replace('\\', ''))[0])
             # print('内容链接:>>',content_url)
             intro = data.get('intro')
             # print('介绍:>>',intro)
@@ -60,8 +60,9 @@ class New():
             line_one =['title','content_url_list','intro','image_dict','keywords']
             writer.writerow(line_one)
             for row in data:
-                datas = [row['title'],row['content_url_list'],row['intro'],row['image_dict'],row['keywords'],]
-                print(row['title'],row['content_url_list'])
+                datas = [row['content_url_list']]
+                # datas = [row['title'],row['content_url_list'],row['intro'],row['image_dict'],row['keywords'],]
+                print(row.get('content_url_list'))
                 writer.writerow(datas)
             f.close()
 
