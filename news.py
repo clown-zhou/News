@@ -35,7 +35,7 @@ class New:
         # print(url)
         s = requests.session()
         response = s.get(url, headers=headers, params=params).text
-        response1 = re.findall('try{jQuery.*?\((.*?)\);}catch\(e\){};', response)[0]
+        response1 = re.findall(r'try{jQuery.*?\((.*?)\);}catch\(e\){};', response)[0]
         return response1
 
     def _return_data(self):
@@ -45,9 +45,10 @@ class New:
         for data in datas:
             title = data.get('title')
             # print('标题:>>',title)
-            content_url_list = [re.findall("([a-z]+://[a-zA-Z0-9./-]+)",
-                                           data.get('wapurls').replace('\\', ''))[0]]
-            print('内容链接:>>', content_url_list)
+            print(data.get('wapurls'))
+            content_url_list = [re.findall(r'([a-z]+://[a-zA-Z0-9./-]+|[a-z]+://[a-zA-Z0-9./-]+)',
+                                           data.get('wapurls').replace('\\', ''))][0]
+            print('内容链接:>>', content_url_list[-1])
             intro = data.get('intro')
             # print('介绍:>>',intro)
             image_dict = {}
@@ -66,7 +67,7 @@ class New:
             writer = csv.writer(f)
             line_one = ['title', 'content_url_list', 'intro', 'image_dict', 'keywords']
             writer.writerow(line_one)
-            for row in data():
+            for row in data:
                 # datas = [row['content_url_list']]
                 datas = [row['title'], row['content_url_list'], row['intro'], row['image_dict'], row['keywords']]
                 # print(row.get('content_url_list'))
@@ -77,5 +78,5 @@ class New:
 if __name__ == "__main__":
     new = New()
     while True:
-        new.save_csv(new._return_data)
+        new.save_csv(new._return_data())
         time.sleep(60)
