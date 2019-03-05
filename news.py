@@ -35,20 +35,20 @@ class New:
         # print(url)
         s = requests.session()
         response = s.get(url, headers=headers, params=params).text
-        response1 = re.findall(r'try{jQuery.*?\((.*?)\);}catch\(e\){};', response)[0]
+        p = re.compile(r'try{jQuery.*?\((.*?)\);}catch\(e\){};')
+        response1 = p.findall(response)[0]
         return response1
 
-    def _return_data(self):
+    def iter_data(self):
         response = self.get_news()
         datas = json.loads(response)['result']['data']
-
         for data in datas:
             title = data.get('title')
             # print('标题:>>',title)
-            print(data.get('wapurls'))
-            content_url_list = [re.findall(r'([a-z]+://[a-zA-Z0-9./-]+|[a-z]+://[a-zA-Z0-9./-]+)',
-                                           data.get('wapurls').replace('\\', ''))][0]
-            print('内容链接:>>', content_url_list[-1])
+            # print(data.get('wapurls'))
+            p = re.compile(r'(http://[\w+./\-]+)')
+            content_url_list = [p.findall(data.get('wapurls').replace('\\', ''))][0]
+            # print('内容链接:>>', content_url_list)
             intro = data.get('intro')
             # print('介绍:>>',intro)
             image_dict = {}
@@ -70,7 +70,8 @@ class New:
             for row in data:
                 # datas = [row['content_url_list']]
                 datas = [row['title'], row['content_url_list'], row['intro'], row['image_dict'], row['keywords']]
-                # print(row.get('content_url_list'))
+                print(row.get('title'), row.get('content_url_list'), row.get('intro'),
+                      row.get('image_dict'), row.get('keywords'))
                 writer.writerow(datas)
             f.close()
 
@@ -78,5 +79,5 @@ class New:
 if __name__ == "__main__":
     new = New()
     while True:
-        new.save_csv(new._return_data())
+        new.save_csv(data=new.iter_data())
         time.sleep(60)
