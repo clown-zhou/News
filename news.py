@@ -1,4 +1,4 @@
-from decorators import run_time
+from decorators import run_time, type_limit
 import requests
 import json
 import time
@@ -40,9 +40,8 @@ class New:
         response1 = p.findall(response)[0]
         return response1
 
-    @run_time
-    def iter_data(self):
-        response = self.get_news()
+    @staticmethod
+    def iter_data(response):
         datas = json.loads(response)['result']['data']
         for data in datas:
             title = data.get('title')
@@ -64,7 +63,8 @@ class New:
 
     @staticmethod
     @run_time
-    def save_csv(data):
+    @type_limit(object, int)
+    def save_csv(data, time_data):
         with open('new.csv', 'a', encoding='utf-8', newline='') as f:
             writer = csv.writer(f)
             line_one = ['title', 'content_url_list', 'intro', 'image_dict', 'keywords']
@@ -77,10 +77,12 @@ class New:
                 print(datas[::])
                 writer.writerow(datas)
             f.close()
+            time.sleep(time_data)
 
 
 if __name__ == "__main__":
     new = New()
     while True:
-        new.save_csv(data=new.iter_data())
-        time.sleep(10)
+        response = new.iter_data(new.get_news())
+        print(isinstance(response, object))
+        new.save_csv(response, 300)
